@@ -1,0 +1,72 @@
+/* Enter your custom styles here */
+.boxline {
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    margin-top: 30px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #b4b2b2;
+    font-size: 30px;
+    height: 130px;
+    width: 220px;
+    padding-left: 20px;
+}
+
+/*  현재 날씨 폰트관리    */
+.temph-font{
+    font-size: 15px;
+    color: rgb(113, 112, 112);
+}
+
+/* 주의요망 텍스트 */
+.waring-font{
+    color: red;
+    font-size: 15px;
+}
+
+.dangerText {
+    color: red;
+    font-weight: bold;
+}
+
+.safeText {
+    color: black;
+}
+
+.tempfont{
+    color: #ccc;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+ /* 오늘 날씨 온도 폰트 */
+.temptext1{
+    font-size: 40px;
+    color: black;
+}
+
+.temptext2{
+    font-size: 40px;
+    color: red;
+}
+
+.temptext3{
+    font-size: 40px;
+    color: blue;
+}
+
+.temptext4{
+    font-size: 40px;
+    color: gray;
+}
+
+.tempicon{
+    margin-left: 15px;
+    margin-top: 5px;
+
+}
+
+.splitbox{
+   margin-top: -20px;
+}
