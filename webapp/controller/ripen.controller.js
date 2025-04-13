@@ -137,10 +137,11 @@ sap.ui.define([
 
             this.byId('Dpose').setValue(oData.Dpose);
             this.byId('Batno').setValue(oData.Batno);
-            this.byId('Datbi').setValue(oData.Batno);
+            this.byId('Datbi').setValue(oData.Datbi);
 
             this.onWaring(oData.Tempe, oData.Humid);
         },
+        //수정필요
         onWaring: function (currentTemp, humidity) {
             const oText = this.byId("WarningText");
         

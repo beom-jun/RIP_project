@@ -142,14 +142,12 @@
             </HBox>  -->
 
              <!--           chart 2             -->
-
-            <viz:VizFrame   id="idLineFrame2"
+            <viz:VizFrame   id="idLineFrame"
                             uiConfig="{applicationSet:'fiori'}"
-                            height="400px"
-                            width="100%"
+                            height="400px" width="100%"
                             vizType="line"
                             vizProperties="{
-                                title:{text:'폐기량 추이'},
+                                title:{text:'일자별 폐기량'},
                                 legend:{visible: true},
                                 plotArea:{dataLabel:{visible: true}}
                                                                     }">
@@ -157,26 +155,30 @@
                 <viz:dataset>
                     <viz.data:FlattenedDataset data="{/RipStorage}">
                         <viz.data:dimensions>
-                            <!-- 날짜 또는 기준이 될 필드 지정 -->
+                            <!-- 날짜를 X축으로 사용 -->
+                            <viz.data:DimensionDefinition name="일자" value="{Datbi}" />
                             <viz.data:DimensionDefinition name="자재번호" value="{Matnr}" />
                         </viz.data:dimensions>
                         <viz.data:measures>
+                            <!-- 폐기량을 Y축으로 사용 -->
                             <viz.data:MeasureDefinition name="폐기량" value="{Dpose}" />
                         </viz.data:measures>
                     </viz.data:FlattenedDataset>
                 </viz:dataset>
 
                 <viz:feeds>
-                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="자재번호" />
+                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="일자" />
+                    <viz.feeds:FeedItem uid="color" type="Dimension" values="자재번호" />
                     <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="폐기량" />
                 </viz:feeds>
 
                 <viz:dependents>
-                    <viz:Popover id="idPopOver2"/>
+                    <viz:Popover id="idPopOver" />
                 </viz:dependents>
             </viz:VizFrame>
-        
-            </HBox>
+
+
+        </HBox>
         
         </VBox>
     
