@@ -29,6 +29,7 @@ sap.ui.define([
                                 case "P1000": label = "경기 숙성창고"; break;
                                 case "P2000": label = "충청 숙성창고"; break;
                                 case "P3000": label = "전라 숙성창고"; break;
+                                case "P4000": label = "경상 숙성창고"; break;
                                 default: label = data.Werks;
                             }
 
@@ -62,10 +63,11 @@ sap.ui.define([
             const locationMap = {
                 "P1000": { lat: 37.5665, lon: 126.9780, name: "경기 숙성창고" },
                 "P2000": { lat: 35.1796, lon: 129.0756, name: "충청 숙성창고" },
-                "P3000": { lat: 33.1796, lon: 115.0756, name: "전라 숙성창고" }
+                "P3000": { lat: 33.1796, lon: 115.0756, name: "전라 숙성창고" },
+                "P4000": { lat: 34.1236, lon: 127.0876, name: "경상 숙성창고" }
             };
 
-            const location = locationMap[sWerks] || locationMap["P3000"];
+            const location = locationMap[sWerks] || locationMap["P1000"];
 
             try {
                 const url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&lang=kr&appid=613ac7d721406d59cec6506314044e4a`;
@@ -90,14 +92,21 @@ sap.ui.define([
         onPlantChange: function (oEvent) {
             const sWerks = oEvent.getSource().getSelectedKey();
             const oModel = this.getView().getModel();
+        
             const aFilter = [new Filter("Werks", "EQ", sWerks)];
-
+        
             oModel.read("/RipStorage", {
                 filters: aFilter,
                 success: (oData) => {
                     if (oData.results && oData.results.length > 0) {
-                        const [oSelected] = this._cleanRipeningData(oData.results);
-                        this.getView().getModel("resultModel").setData(oSelected);
+                        const aFiltered = this._cleanRipeningData(oData.results);
+        
+                        // resultModel 단일 선택
+                        this.getView().getModel("resultModel").setData(aFiltered[0]);
+        
+                        // ripeningModel 차트 렌더링링
+                        this.getView().getModel("ripeningModel").setData(aFiltered);
+        
                         this.onCurrweather(sWerks);
                     }
                 },
@@ -106,7 +115,7 @@ sap.ui.define([
                 }
             });
         },
-        //list box로 plant 선택 시 정보들 변환환
+        //list box로 plant 선택 시 정보들 변환
         onComboChange: function (oEvent) {
             const sInputValue = oEvent.getSource().getValue();
             const aPlantList = this.getView().getModel("werksModel").getData();
@@ -186,15 +195,5 @@ sap.ui.define([
                 return item;
             });
         }
-        
-        //Datbi 오름차순 정렬
-        // onAfterRendering: function () {
-        //     var oVizFrame = this.byId("idLineFrame");
-        //     var oDataset = oVizFrame.getDataset();
-        //     var oBinding = oDataset.getBinding("data");
-        
-        //     oBinding.sort(new sap.ui.model.Sorter("Datbi", false)); // 오름차순 정렬
-        // }
-
     });
 });
