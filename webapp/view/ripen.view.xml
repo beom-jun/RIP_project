@@ -9,12 +9,11 @@
     xmlns:m="sap.suite.ui.microchart"
     xmlns:layout="sap.ui.layout"
     xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
-    xmlns:viz.data="sap.viz.ui5.data"
-    models="resultModel">
+    xmlns:viz.data="sap.viz.ui5.data">
 
     <Page id="page" title="숙성창고 모니터링" showHeader="false" class="sapUiContentPadding">
         <!--            PLANT LIST BOX          -->
-       <ComboBox
+        <ComboBox
             id="comboWerks"
             items="{werksModel>/}"
             selectedKey="{viewModel>/selectedWerks}"
@@ -29,159 +28,150 @@
             <VBox class="boxline">
                 <Text text="현재온도" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text id="txtTempCurr" class="temptext1"/><core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
+                    <Text id="txtTempCurr" class="temptext1"/>
+                    <core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
                 <Text text="최고기온" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text id="txtTempMax" class="temptext2"/><core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
+                    <Text id="txtTempMax" class="temptext2"/>
+                    <core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
                 <Text text="최저기온" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text id="txtTempMin" class="temptext3"/><core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
+                    <Text id="txtTempMin" class="temptext3"/>
+                    <core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
                 <Text text="현재습도" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text id="txtHumidity" class="temptext4"/><core:Icon src="sap-icon://cloud" size="2rem" color="black" class="tempicon"/>
+                    <Text id="txtHumidity" class="temptext4"/>
+                    <core:Icon src="sap-icon://cloud" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
         </HBox>
 
-                    <!--        창고온도        -->
+        <!--        창고온도        -->
         <HBox  alignItems="Center" class="sapUiSmallMargin" justifyContent="SpaceAround">
 
             <VBox class="boxline">
                 <Text text="적정온도" class="temph-font"/>
                 <HBox class="tempfont">
-                    <Text text="2°C" class="temptext1"/><core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
+                    <Text text="2°C" class="temptext1"/>
+                    <core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
                 <Text text="창고온도" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text text="{= Math.round(${resultModel>/Tempe}) + '°C'}" class="temptext1"/><core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
+                    <Text text="{= Math.round(${resultModel>/Tempe}) + '°C'}" class="temptext1"/>
+                    <core:Icon src="sap-icon://temperature" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
                 <Text text="습도" class="temph-font"/>
                 <HBox class="tempfont">
-                <Text text="{= Math.round(${resultModel>/Humid}) + '%'}" class="temptext4"/><core:Icon src="sap-icon://cloud" size="2rem" color="black" class="tempicon"/>
+                    <Text text="{= Math.round(${resultModel>/Humid}) + '%'}" class="temptext4"/>
+                    <core:Icon src="sap-icon://cloud" size="2rem" color="black" class="tempicon"/>
                 </HBox>
             </VBox>
 
             <VBox class="boxline">
-                <Text id="WarningText"/>
+                <Text id="WarningText" class="temph-font"/>
             </VBox>
 
         </HBox>  
 
         <!--            chart area                   -->
-        <VBox >
-        
+        <!--            chart 폐기량                 -->
+        <VBox>
             <HBox alignItems="Center" justifyContent="SpaceAround" height="400px" width="100%">
+                <viz:VizFrame
+                    id="idLineFrame"
+                    uiConfig="{applicationSet:'fiori'}"
+                    height="350px" width="1200px"
+                    vizType="line"
+                    class="interval-top"
+                    vizProperties="{
+                        title:{text:'일자별 폐기량'},
+                        legend:{visible: true},
+                        plotArea:{dataLabel:{visible: true}}
+                    }">
 
-            <!--           chart 1             --> 
-            <!-- <viz:VizFrame id="idLineFrame" uiConfig="{applicationSet:'fiori'}"
-                                    height='100%' width="100%" vizType='Column'
-                                    vizProperties="{
-                                        title:{text:'Seats booking Information'},
-                                        legend:{drawingEffect: 'glossy'},
-                                        plotArea:{drawingEffect: 'glossy'}
-                                    }">
+                    <viz:dataset>
+                        <viz.data:FlattenedDataset data="{ripeningModel>/}">
+                            <viz.data:dimensions>
+                                <viz.data:DimensionDefinition name="일자" value="{ripeningModel>Datbi}" />
+                                <viz.data:DimensionDefinition name="자재번호" value="{ripeningModel>Matnr}" />
+                            </viz.data:dimensions>
+                            <viz.data:measures>
+                                <viz.data:MeasureDefinition name="폐기량" value="{ripeningModel>Dpose}" />
+                            </viz.data:measures>
+                        </viz.data:FlattenedDataset>
+                    </viz:dataset>
 
-                <viz:dataset>
-                    <viz.data:FlattenedDataset data="{/FlightSet}">
-                        <viz.data:dimensions>
-                            <viz.data:DimensionDefinition name="Airline name"
-                                value="{Carrname}" />
-                        </viz.data:dimensions>
+                    <viz:feeds>
+                        <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="일자" />
+                        <viz.feeds:FeedItem uid="color" type="Dimension" values="자재번호" />
+                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="폐기량" />
+                    </viz:feeds>
 
-                        <viz.data:measures>
-                            <viz.data:MeasureDefinition name="Seats max"
-                                value="{Seatsmax}" />
-                            <viz.data:MeasureDefinition name="Seatsocc"
-                                value="{Seatsocc}" />
-                        </viz.data:measures>
-                    </viz.data:FlattenedDataset>
-                </viz:dataset>
-
-                <viz:feeds>
-                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="Airline name" />
-                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Seats max" />
-                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="Seatsocc" />
-                </viz:feeds>
-
-                <viz:dependents>
-                    <viz:Popover id="idPopOver"></viz:Popover>
-                </viz:dependents>
-
-            </viz:VizFrame>
-
-            <HBox class='margin'>
-                <FlexBox width="700px" height="400px" alignItems="Start" justifyContent="SpaceBetween">
-                    <m:InteractiveDonutChart displayedSegments="15">
-                        <m:segments>
-                            <m:InteractiveDonutChartSegment label="{Carrname}" 
-                                                            value="{Seatsocc}" 
-                                                            displayedValue="{Seatsocc}"
-                                                            color="Critical" />
-                        </m:segments>
-                    </m:InteractiveDonutChart>
-                </FlexBox>
-            </HBox>  -->
-
-             <!--           chart 2             -->
-            <viz:VizFrame   id="idLineFrame"
-                            uiConfig="{applicationSet:'fiori'}"
-                            height="400px" width="100%"
-                            vizType="line"
-                            vizProperties="{
-                                title:{text:'일자별 폐기량'},
-                                legend:{visible: true},
-                                plotArea:{dataLabel:{visible: true}}
-                                                                    }">
-
-                <viz:dataset>
-                    <viz.data:FlattenedDataset data="{/RipStorage}">
-                        <viz.data:dimensions>
-                            <!-- 날짜를 X축으로 사용 -->
-                            <viz.data:DimensionDefinition name="일자" value="{Datbi}" />
-                            <viz.data:DimensionDefinition name="자재번호" value="{Matnr}" />
-                        </viz.data:dimensions>
-                        <viz.data:measures>
-                            <!-- 폐기량을 Y축으로 사용 -->
-                            <viz.data:MeasureDefinition name="폐기량" value="{Dpose}" />
-                        </viz.data:measures>
-                    </viz.data:FlattenedDataset>
-                </viz:dataset>
-
-                <viz:feeds>
-                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="일자" />
-                    <viz.feeds:FeedItem uid="color" type="Dimension" values="자재번호" />
-                    <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="폐기량" />
-                </viz:feeds>
-
-                <viz:dependents>
-                    <viz:Popover id="idPopOver" />
-                </viz:dependents>
-            </viz:VizFrame>
-
-
-        </HBox>
-        
+                    <viz:dependents>
+                        <viz:Popover id="idPopOver" />
+                    </viz:dependents>
+                </viz:VizFrame>
+            </HBox>
         </VBox>
-    
+
+        <!--            chart 온도변화 추이                 -->
+        <VBox>
+            <HBox alignItems="Center" justifyContent="SpaceAround" height="400px" width="100%">
+                <viz:VizFrame
+                    id="idLineFrame2"
+                    uiConfig="{applicationSet:'fiori'}"
+                    height="350px" width="1200px"
+                    vizType="line"
+                    class="interval-top2"
+                    vizProperties="{
+                        title:{text:'창고 온도변화 추이'},
+                        legend:{visible: true},
+                        plotArea:{dataLabel:{visible: true}}
+                    }">
+
+                    <viz:dataset>
+                        <viz.data:FlattenedDataset data="{ripeningModel>/}">
+                            <!-- <viz.data:dimensions>
+                                <viz.data:DimensionDefinition name="일자" value="{ripeningModel>Datbi}" />
+                                <viz.data:DimensionDefinition name="자재번호" value="{ripeningModel>Matnr}" />
+                            </viz.data:dimensions> -->
+                            <viz.data:measures>
+                                <viz.data:MeasureDefinition name="온도°C" value="{ripeningModel>Tempe}" />
+                            </viz.data:measures>
+                        </viz.data:FlattenedDataset>
+                    </viz:dataset>
+
+                    <viz:feeds>
+                        <!-- <viz.feeds:FeedItem uid="categoryAxis" type="Dimension" values="일자" />
+                        <viz.feeds:FeedItem uid="color" type="Dimension" values="자재번호" /> -->
+                        <viz.feeds:FeedItem uid="valueAxis" type="Measure" values="온도°C" />
+                    </viz:feeds>
+
+                    <viz:dependents>
+                        <viz:Popover id="idPopOver2" />
+                    </viz:dependents>
+                </viz:VizFrame>
+            </HBox>
+        </VBox>
 
     </Page>
 
