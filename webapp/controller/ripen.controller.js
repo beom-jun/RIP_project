@@ -98,17 +98,18 @@ sap.ui.define([
             oModel.read("/RipStorage", {
                 filters: aFilter,
                 success: (oData) => {
-                    if (oData.results && oData.results.length > 0) {
-                        const aFiltered = this._cleanRipeningData(oData.results);
-        
-                        // resultModel 단일 선택
-                        this.getView().getModel("resultModel").setData(aFiltered[0]);
-        
-                        // ripeningModel 차트 렌더링링
-                        this.getView().getModel("ripeningModel").setData(aFiltered);
-        
-                        this.onCurrweather(sWerks);
-                    }
+                    const cleanedData = this._cleanRipeningData(oData.results);
+                
+                    //  최신 데이터 기준: 마지막 항목 사용
+                    const latestEntry = cleanedData[cleanedData.length - 1];
+                    this.getView().getModel("resultModel").setData(latestEntry);
+                
+                    // 차트용 전체 데이터도 갱신
+                    this.getView().getModel("ripeningModel").setData(cleanedData);
+                
+                    // 상태 업데이트
+                    this.onWaring(latestEntry.Tempe, latestEntry.Humid);
+                    this.onCurrweather(sWerks);
                 },
                 error: (err) => {
                     console.error("플랜트 데이터 호출 실패:", err);
@@ -155,14 +156,26 @@ sap.ui.define([
         //주의요망 부분인데 수정 필요
         onWaring: function (currentTemp, humidity) {
             const oText = this.byId("WarningText");
+            const oIcon = this.byId("WarningIcon");
+        
+            // 기본 상태 초기화
+            oText.setText("양호");
+            oText.removeStyleClass("dangerText");
+            oText.addStyleClass("safeText");
+        
+            oIcon.setSrc("sap-icon://status-positive"); // 초록색 느낌의 아이콘
+            oIcon.removeStyleClass("dangericon");
+            oIcon.addStyleClass("safeicon");
+        
+            // 조건 충족 시 경고 상태로 전환
             if (currentTemp >= 5 || humidity >= 90) {
                 oText.setText("주의요망!");
                 oText.removeStyleClass("safeText");
                 oText.addStyleClass("dangerText");
-            } else {
-                oText.setText("숙성중");
-                oText.removeStyleClass("dangerText");
-                oText.addStyleClass("safeText");
+        
+                oIcon.setSrc("sap-icon://alert");
+                oIcon.removeStyleClass("safeicon");
+                oIcon.addStyleClass("dangericon");
             }
         },
         // 날짜, 시간 타입 변경

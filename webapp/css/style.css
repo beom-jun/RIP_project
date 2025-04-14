@@ -2,7 +2,7 @@
 .boxline {
     border: 1px solid #ccc;
     margin-right: 10px;
-    margin-top: 30px;
+    margin-top: 10px;
     border-radius: 8px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     box-sizing: border-box;
@@ -20,6 +20,16 @@
     color: rgb(113, 112, 112);
 }
 
+.todaywt{
+    margin-top: 40px;
+    margin-left: 40px;
+    font-weight: 800;
+}
+
+.todaywt Text{
+     font-size: 30px;
+}
+
 /* 주의요망 텍스트 */
 .waring-font{
     color: red;
@@ -27,12 +37,31 @@
 }
 
 .dangerText {
-    color: red;
+    color: black;
+    font-size: 20px;
+    margin-top: 25px;
     font-weight: bold;
+}
+
+.dangericon{
+    color: #e33614;
+    margin-right: 15px;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.safeicon{
+    color: #14e352;
+    margin-right: 15px;
+    margin-left: 5px;
+    margin-top: 15px;
 }
 
 .safeText {
     color: black;
+    font-size: 20px;
+    margin-top: 25px;
+    font-weight: bold;
 }
 
 .tempfont{

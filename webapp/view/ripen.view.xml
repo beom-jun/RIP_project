@@ -23,6 +23,11 @@
         </ComboBox>
 
         <!--            오늘 날씨            -->
+
+        <HBox class="todaywt">
+            <Text text="오늘의 날씨"></Text>
+        </HBox>
+        
         <HBox  alignItems="Center" class="sapUiSmallMargin" justifyContent="SpaceAround">
 
             <VBox class="boxline">
@@ -59,6 +64,10 @@
 
         </HBox>
 
+        <VBox class="todaywt">
+            <Text text="숙성창고 현황"></Text>
+        </VBox>
+
         <!--        창고온도        -->
         <HBox  alignItems="Center" class="sapUiSmallMargin" justifyContent="SpaceAround">
 
@@ -87,7 +96,12 @@
             </VBox>
 
             <VBox class="boxline">
-                <Text id="WarningText" class="temph-font"/>
+                <Text text="주의상태" class="temph-font"></Text>
+                <HBox>
+                    <core:Icon id="WarningIcon" src="sap-icon://status-positive" size="2.5rem" class="safeicon"/>
+                    <Text id="WarningText" text="양호" class="safeText"/>
+                </HBox>
+
             </VBox>
 
         </HBox>  
