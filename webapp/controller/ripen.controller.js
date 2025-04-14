@@ -26,8 +26,9 @@ sap.ui.define([
                             //plant 번호 대신 지역 이름으로 설정정
                             let label = "";
                             switch (data.Werks) {
-                                case "P1000": label = "서울 숙성창고"; break;
-                                case "P2000": label = "부산 숙성창고"; break;
+                                case "P1000": label = "경기 숙성창고"; break;
+                                case "P2000": label = "충청 숙성창고"; break;
+                                case "P3000": label = "전라 숙성창고"; break;
                                 default: label = data.Werks;
                             }
 
@@ -39,7 +40,6 @@ sap.ui.define([
                     this.getView().setModel(new JSONModel(), "resultModel");
                     this.getView().setModel(new JSONModel({ selectedWerks: "" }), "viewModel");
                     this.getView().setModel(new JSONModel(aCleaned), "ripeningModel"); // 차트용 모델
-                    // this.getView().setModel(new JSONModel(aSorted), "ripeningModel");
 
                     if (aPlants.length > 0) {
                         const sDefault = aPlants[0].key;
@@ -60,11 +60,12 @@ sap.ui.define([
         //open wether API 받아옴
         onCurrweather: async function (sWerks) {
             const locationMap = {
-                "P1000": { lat: 37.5665, lon: 126.9780, name: "서울 숙성창고" },
-                "P2000": { lat: 35.1796, lon: 129.0756, name: "부산 숙성창고" }
+                "P1000": { lat: 37.5665, lon: 126.9780, name: "경기 숙성창고" },
+                "P2000": { lat: 35.1796, lon: 129.0756, name: "충청 숙성창고" },
+                "P3000": { lat: 33.1796, lon: 115.0756, name: "전라 숙성창고" }
             };
 
-            const location = locationMap[sWerks] || locationMap["P1000"];
+            const location = locationMap[sWerks] || locationMap["P3000"];
 
             try {
                 const url = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&units=metric&lang=kr&appid=613ac7d721406d59cec6506314044e4a`;
@@ -138,10 +139,11 @@ sap.ui.define([
             this.byId('Dpose').setValue(oData.Dpose);
             this.byId('Batno').setValue(oData.Batno);
             this.byId('Datbi').setValue(oData.Datbi);
+            this.byId('Temptime').setValue(oData.Temptime);
 
             this.onWaring(oData.Tempe, oData.Humid);
         },
-        //주의요망 부분인데 수정 필요요
+        //주의요망 부분인데 수정 필요
         onWaring: function (currentTemp, humidity) {
             const oText = this.byId("WarningText");
             if (currentTemp >= 5 || humidity >= 90) {
@@ -154,10 +156,13 @@ sap.ui.define([
                 oText.addStyleClass("safeText");
             }
         },
-        // 날짜 타입 숫자로 뜨는 거 변환
+        // 날짜, 시간 타입 변경
         _cleanRipeningData: function (aData) {
             return aData.map(item => {
                 item.Dpose = Number(item.Dpose || 0);
+                item.Tempe = Number(item.Tempe || 0);
+        
+                // 날짜 문자열로 변환환
                 if (item.Datbi) {
                     const date = new Date(item.Datbi);
                     const yyyy = date.getFullYear();
@@ -165,9 +170,23 @@ sap.ui.define([
                     const dd = String(date.getDate()).padStart(2, '0');
                     item.Datbi = `${yyyy}-${mm}-${dd}`;
                 }
+        
+                // 시간 문자열로 변경
+                if (typeof item.Temptime === "object" && item.Temptime.ms) {
+                    const dateObj = new Date(item.Temptime.ms);
+                    const hours = String(dateObj.getHours()).padStart(2, '0');
+                    const mins = String(dateObj.getMinutes()).padStart(2, '0');
+                    item.Temptime = `${hours}:${mins}`;
+                } else if (typeof item.Temptime === "string" && item.Temptime.length === 6) {
+                    const hours = item.Temptime.substring(0, 2);
+                    const mins = item.Temptime.substring(2, 4);
+                    item.Temptime = `${hours}:${mins}`;
+                }
+        
                 return item;
             });
         }
+        
         //Datbi 오름차순 정렬
         // onAfterRendering: function () {
         //     var oVizFrame = this.byId("idLineFrame");
