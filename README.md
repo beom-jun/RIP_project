@@ -7,7 +7,7 @@
 |**Generation Platform**<br>Visual Studio Code|
 |**Template Used**<br>simple|
 |**Service Type**<br>OData Url|
-|**Service URL**<br>http://bgissap1.bgissap.co.kr:8000//sap/opu/odata4/sap/zc102_rip_01_cds/srvd/sap/zc102_rip_01_srv/0001/|
+|**Service URL**<br>http://bgissap1.bgissap.co.kr:8000/sap/bc/ui5_ui5/sap/zc102_rip_01/index.html?sap-client=100/|
 |**Module Name**<br>ripening|
 |**Application Title**<br>숙성창고|
 |**Namespace**<br>syncroad|
